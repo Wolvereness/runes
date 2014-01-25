@@ -92,6 +92,18 @@ public class Rune<T, E extends Throwable> {
 			return (this.nodes = nodes)[nodes.length - 1] = new Node(node);
 		}
 
+		public Rune<Boolean, AssertionError> booleanRune() {
+			return booleanRune(AssertionError.class);
+		}
+
+		public Rune<Boolean, RuntimeException> booleanRune(final Boolean def) {
+			return typedRune(BOOLEANS, def);
+		}
+
+		public <E extends Throwable> Rune<Boolean, E> booleanRune(final Class<E> clazz) {
+			return typedRune(BOOLEANS, clazz);
+		}
+
 		public Rune<Double, AssertionError> doubleRune() {
 			return doubleRune(AssertionError.class);
 		}
@@ -197,6 +209,23 @@ public class Rune<T, E extends Throwable> {
 		T transform(Object object);
 	}
 
+	static final Transformer<Boolean> BOOLEANS = new Transformer<Boolean>()
+		{
+			public Boolean transform(final Object object) {
+				if (object instanceof Boolean)
+					return (Boolean) object;
+				if (JSON && object instanceof JsonValue) {
+					if (object== JsonValue.FALSE)
+						return Boolean.FALSE;
+					if (object == JsonValue.TRUE)
+						return Boolean.TRUE;
+					if (object instanceof JsonString)
+						return Boolean.valueOf(((JsonString) object).getString());
+				} else if (object instanceof String) return Boolean.valueOf((String) object);
+				throw new ClassCastException(object.getClass() + "(" + object + ") cannot be cast to Double");
+			}
+		};
+
 	static final Transformer<Double> DOUBLES = new Transformer<Double>()
 		{
 			public Double transform(final Object object) {
@@ -278,17 +307,20 @@ public class Rune<T, E extends Throwable> {
 		}
 		JSON = json;
 	}
+
 	/**
 	 * @return a new builder
 	 */
 	public static Builder newBuilder() {
 		return new Base();
 	}
+
 	static Object nullify(final Object object) {
 		if (object == null)
 			return NULL;
 		return object;
 	}
+
 	private final Base basis;
 	private final T def;
 	private final Class<? extends E> exClass;
@@ -317,7 +349,7 @@ public class Rune<T, E extends Throwable> {
 			value = resolve(object);
 		}
 
-		if (value == NULL)
+		if (value == NULL || (JSON && value == JsonValue.NULL))
 			return null;
 		if (value == null) {
 			if (exClass == null)
