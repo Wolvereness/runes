@@ -271,9 +271,6 @@ public class Rune<T, E extends Throwable> {
 			public Object transform(final Object object) {
 				if (JSON && object instanceof JsonValue) {
 					switch (((JsonValue) object).getValueType()) {
-					case ARRAY:
-					case OBJECT:
-						return object;
 					case NULL:
 						return null;
 					case FALSE:
@@ -284,6 +281,9 @@ public class Rune<T, E extends Throwable> {
 						return ((JsonString) object).getString();
 					case NUMBER:
 						return ((JsonNumber) object).doubleValue();
+					case ARRAY:
+					case OBJECT:
+					default:
 					}
 				}
 				return object;
