@@ -212,6 +212,8 @@ public class Rune<T, E extends Throwable> {
 	static final Transformer<Boolean> BOOLEANS = new Transformer<Boolean>()
 		{
 			public Boolean transform(final Object object) {
+				if (object == null)
+					return null;
 				if (object instanceof Boolean)
 					return (Boolean) object;
 				if (JSON && object instanceof JsonValue) {
@@ -229,6 +231,8 @@ public class Rune<T, E extends Throwable> {
 	static final Transformer<Double> DOUBLES = new Transformer<Double>()
 		{
 			public Double transform(final Object object) {
+				if (object == null)
+					return null;
 				if (object instanceof Double)
 					return (Double) object;
 				if (object instanceof Float)
@@ -244,6 +248,8 @@ public class Rune<T, E extends Throwable> {
 	static final Transformer<Long> LONGS = new Transformer<Long>()
 		{
 			public Long transform(final Object object) {
+				if (object == null)
+					return null;
 				if (object instanceof Long)
 					return (Long) object;
 				if (JSON && object instanceof JsonNumber)
@@ -293,6 +299,8 @@ public class Rune<T, E extends Throwable> {
 	static final Transformer<String> STRINGS = new Transformer<String>()
 		{
 			public String transform(final Object object) {
+				if (object == null)
+					return null;
 				if (JSON && object instanceof JsonString)
 					return ((JsonString) object).getString();
 				return object.toString();
@@ -350,7 +358,7 @@ public class Rune<T, E extends Throwable> {
 		}
 
 		if (value == NULL || (JSON && value == JsonValue.NULL))
-			return null;
+			return transformer.transform(null);
 		if (value == null) {
 			if (exClass == null)
 				return def;
