@@ -88,7 +88,7 @@ public class Rune<T, E extends Throwable> {
 
 		Node add(final Object node) {
 			Node[] nodes;
-			System.arraycopy(nodes = this.nodes, nodes.length, nodes = new Node[nodes.length + 1], 0, nodes.length - 1);
+			System.arraycopy(nodes = this.nodes, 0, nodes = new Node[nodes.length + 1], 0, nodes.length - 1);
 			return (this.nodes = nodes)[nodes.length - 1] = new Node(node);
 		}
 
