@@ -17,6 +17,7 @@
 package com.wolvereness.runeslib;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -170,6 +171,11 @@ public class Rune<T, E extends Throwable> {
 
 		public Rune<String, RuntimeException> stringRune(final String def) {
 			return typedRune(STRINGS, def);
+		}
+
+		@Override
+		public String toString() {
+			return String.format("Builder { identifier=%s, nodes=%s }", identifier, Arrays.toString(nodes));
 		}
 
 		public <T> Rune<T, AssertionError> typedRune() {
@@ -491,5 +497,10 @@ public class Rune<T, E extends Throwable> {
 			stackMarkers[depth] = i + 1;
 			stackObjects[depth] = currentObject;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Rune { basis=%s, def=%s, exClass=%s, transformer=%s }", basis, def, exClass, transformer);
 	}
 }
